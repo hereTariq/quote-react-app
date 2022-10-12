@@ -1,25 +1,36 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
 
-export default App;
+class App extends React.Component{
+    state = {
+        quote:''
+    }
+    componentDidMount(){
+        this.fetchQuote()
+    }
+    fetchQuote(){
+        fetch('https://api.adviceslip.com/advice')
+            .then(response => response.json())
+            .then(result => {
+                const {advice} = result.slip;
+                this.setState({quote:advice})
+            })
+            .catch(error => {
+            console.log(error)
+        })
+    }
+    render() {
+
+        return  (
+            <div className="container">
+                <div className="quote-container">
+                    <h1 className="quote">
+                        {this.state.quote}
+                    </h1>
+                    <button className="btn" onClick={() => this.fetchQuote()}>Next</button>
+                </div>
+            </div>)
+    }
+}
+export default App
